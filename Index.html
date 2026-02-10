@@ -110,39 +110,64 @@ button {
 <div class="card">
 
   <div class="question" id="question">
-    Do you love him? 😏
+    (Loading...)
   </div>
 
   <div class="image-area" id="imageArea">
-    <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+    <img src="https://media.giphy.com/media/g9rGnJPaHQqVWI0dkq/giphy.gif">
   </div>
 
-  <div class="buttons">
-    <button id="yesBtn">YES ❤️</button>
-    <button id="noBtn">NO 🙄</button>
-  </div>
+  <div class="buttons"></div>
 
   <div class="success" id="successMsg"></div>
 
 </div>
 
-<!-- SOUND -->
 <audio id="successSound"
   src="https://assets.mixkit.co/sfx/preview/mixkit-animated-small-group-applause-523.mp3">
 </audio>
 
 <script>
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const arena = document.querySelector(".buttons");
-
 const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
-
 const sound = document.getElementById("successSound");
 const imageArea = document.getElementById("imageArea");
 const successMsg = document.getElementById("successMsg");
 const question = document.getElementById("question");
+const arena = document.querySelector(".buttons");
+
+/* ---------- QUESTIONS ---------- */
+
+const questions = [
+  { text: "1️⃣ Do you agree that your husband is the best gift you got this year? 🎁😌", gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWo0YTdpdjR0bHFja25qdjYxbG52dDMxMmwxaDJxaGV5anVkN2FqOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LKFzjcZmI42iMpdjVS/giphy.gif" },
+  { text: "2️⃣ Is it true that you secretly smile every time he acts dramatic? 🙄❤️", gif: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OWV6ZDBxbGUyM2Q3OGRlYzZzYXdtb2tqaTd3bnhwdGFjZmY0emgwNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CsRaCmrim6xahGIQ94/giphy.gif" },
+  { text: "3️⃣ Would you still choose him… even if he fight or forget to call? 🍿😏", gif: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Z2pqdzRpbnFqZmtwYnJuZjcwMjZrdnVlMDU2OTAwaWlvcXRvN3VzNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/R1h3bcn7ur48o/giphy.gif" },
+  { text: "4️⃣ Do you admit that life without him would be… slightly less entertaining? 🎭😂", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHY3cmlpdWY0cW9yY251YTVrY2R4bW5seGZpdTRwNWd2Nm11dHQ3ZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/RKS1pHGiUUZ2g/giphy.gif" },
+  { text: "5️⃣ Is he the reason your days are never boring? (And your patience is tested daily?) 😇😈", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjZxYXF0c3VmZGp5YmZveTQyYXB2NWJrMXp0c3FteW5uc3J3cnNlNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/7RZUr7OSOAhTG/giphy.gif" },
+  { text: "6️⃣ Do you promise to tolerate his jokes forever and ever? ♾️🤣", gif: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YjNla2R4NGp3NmY1aHY0YXY2eDdlbTcxZ2g4YWp3aXFhMDVodnJ3bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zr5cjVmRSfT3y/giphy.gif" },
+  { text: "7️⃣ Is he annoyingly lovable? 🥹💕", gif: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3eWZyaTUxM3lqNXg3djdqMTA5bXpuaDNuanFvZTJ3NWVtdWNmbnA4aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/iGtmliqfHr1JIRNgay/giphy.gif" },
+  { text: "8️⃣ Do you agree that he deserves cake today just for existing? 🍰😌", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXE3d25vb3B3N2xqM3F5c2R3bmMzaTMzaXdoY28zdmFyYXZlbWRkNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yqyV4Gh0werUQ/giphy.gif" },
+  { text: "9️⃣ Would you pick him again in every lifetime… even the one where he snores louder? 😴❤️", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWV2dDl6M2F4dDkzbGNscWV2aXVzZzk3bjhudzdzd2M4ZjdqbGdoYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o6Mb5205PMRWf0PGo/giphy.gif" },
+  { text: "🔟 Is he officially your favorite human on this planet? 🌍😏", gif: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dmFmMXR1eHFndnlqbDMyZzU2d2pjNDloeHYzNzExbGd0cXJ4ZmhpayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/hjvBoWTABwwNi/giphy.gif" }
+];
+
+/* ---------- COMMENTS ---------- */
+
+const comments = [
+  { text: "1️⃣ Knew it. The truth has been spoken. No takebacks. 👩‍⚖️😌", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWl4MnpqZ2ZoZzB6cjEwMm8ybWkxc3Z2cDNpam16OHd5d2d2Y2g0OSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JEHHivhbRZoVGkG5NK/giphy.gif" },
+  { text: "2️⃣ Excellent choice. But is he the only one dramatic?... 😏✔️", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcm13ejczMjc3cDRjbWlhc20yMHlocmNhaHY0bGUyOXAyeWkyaHB0MSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/5WXqTFTgO9a7e/giphy.gif" },
+  { text: "3️⃣ Ahhh yes… destiny, fate, and mild emotional blackmail all worked. 😘", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWV3bW5qeWhrcWltdGNmbGRzMjJ2djl1M3NtYjU1eHZpcWRjMHlweSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l0amJzVHIAfl7jMDos/giphy.gif" },
+  { text: "4️⃣ Congratulations! You have unlocked premium husband content. 🎮💍", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2lpMWIxMjh3Z3Q4OXg4ZmVlaDlheHVsaDlweGJnZHR3M3hycGIwZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3EfgWHj0YIDrW/giphy.gif" },
+  { text: "5️⃣ See? Resistance is futile when love is involved. 😈❤️", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDJjOG93ZmhxY3o0eHh6cW84bzh5OTB6c2x3bnI0b3BoMnFtdmhvMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3NgcLVc9B2tEPUUCMz/giphy.gif" },
+  { text: "6️⃣ Your honesty has been recorded for eternity. Screenshotting mentally. 📸😂", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2pkMjh6d3ZiamV0eWM4YjUxM2p6MDgwYXVndWtyY3lhMDFqcmZjaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/W5aG2ZXhxF4l0Z9Iha/giphy.gif" },
+  { text: "7️⃣ And THAT, ladies and gentlemen, is how you win an argument forever. 🏆😌", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjIzY2h0eHhxOWt0MzdvN3Z6ZXdvdmZxZW8wYjdkZjc4c2dkeWFyYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/DfbpTbQ9TvSX6/giphy.gif" },
+  { text: "8️⃣ You clicked YES. This will be mentioned for the next 40 years. 📜🤣", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXZiOTUzYjF1N2NpYmVhZjI1MHJzMml1cGN6dW55dXQ5cGh4eXk5bSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JrH3p5ZyUHEV6iyvR4/giphy.gif" },
+  { text: "9️⃣ Ohh!! I should have thought it through... 🙄", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExemhweDJ6YXcxN25sd3drbGF2N3Fram8zNjMwOGthNnFoZmRkYzl4aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3orieKhpoa2Kd80Koo/giphy.gif" },
+  { text: "🔟 Love has spoken. Husband's ego loading… 47%… 82%… 💥😎", gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGdtcjZmMzVsdnd1d2IzaG16ZzVnbzcxNTFsYjBqYjVoZWlwYnk3NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/39V7Yg3swPRv2/giphy.gif" }
+];
+
+let currentQuestion = 0;
+let noBtn, yesBtn;
 
 /* ---------- CANVAS ---------- */
 
@@ -154,9 +179,10 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
 }
 
-/* ---------- NO BUTTON EVASION ---------- */
+/* ---------- NO BUTTON ---------- */
 
 function moveNoButton() {
+  if (!noBtn || !yesBtn) return;
 
   const arenaRect = arena.getBoundingClientRect();
   const yesRect = yesBtn.getBoundingClientRect();
@@ -164,83 +190,93 @@ function moveNoButton() {
   const btnW = noBtn.offsetWidth;
   const btnH = noBtn.offsetHeight;
 
-  const pad = 10;
+  const maxX = arenaRect.width - btnW - 10;
+  const maxY = arenaRect.height - btnH - 10;
 
-  const maxX = arenaRect.width - btnW - pad;
-  const maxY = arenaRect.height - btnH - pad;
-
-  let x, y, overlap;
-
+  let x, y;
   do {
     x = Math.random() * maxX;
     y = Math.random() * maxY;
-
-    const noRect = {
-      left: arenaRect.left + x,
-      right: arenaRect.left + x + btnW,
-      top: arenaRect.top + y,
-      bottom: arenaRect.top + y + btnH
-    };
-
-    overlap =
-      !(noRect.right < yesRect.left ||
-        noRect.left > yesRect.right ||
-        noRect.bottom < yesRect.top ||
-        noRect.top > yesRect.bottom);
-
-  } while (overlap);
+  } while (
+    Math.abs(x - yesRect.left) < 80 &&
+    Math.abs(y - yesRect.top) < 80
+  );
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
 
-/* ---- PROXIMITY ESCAPE ---- */
+/* ---------- SHOW QUESTION ---------- */
 
-document.addEventListener("mousemove", e => {
-  const r = noBtn.getBoundingClientRect();
+function showQuestion(index) {
+  currentQuestion = index;
 
-  const dist = Math.hypot(
-    e.clientX - (r.left + r.width / 2),
-    e.clientY - (r.top + r.height / 2)
-  );
+  question.textContent = questions[index].text;
+  successMsg.textContent = "";
 
-  if (dist < 85) moveNoButton();
-});
+  imageArea.innerHTML = `<img src="${questions[index].gif}">`;
 
-document.addEventListener("touchmove", e => {
-  const t = e.touches[0];
-  const r = noBtn.getBoundingClientRect();
+  arena.innerHTML = `
+    <button id="yesBtn">YES ❤️</button>
+    <button id="noBtn">NO 🙄</button>
+  `;
 
-  const dist = Math.hypot(
-    t.clientX - (r.left + r.width / 2),
-    t.clientY - (r.top + r.height / 2)
-  );
+  yesBtn = document.getElementById("yesBtn");
+  noBtn = document.getElementById("noBtn");
 
-  if (dist < 90) moveNoButton();
-});
-
-/* FALLBACK */
-["mouseenter", "focus", "touchstart"].forEach(evt =>
-  noBtn.addEventListener(evt, moveNoButton)
-);
+  yesBtn.onclick = showGifAndNextBtn;
+  noBtn.onmouseenter = moveNoButton;
+  noBtn.onclick = moveNoButton;
+}
 
 /* ---------- YES CLICK ---------- */
 
-yesBtn.addEventListener("click", () => {
+function showGifAndNextBtn() {
+  const comment = comments[currentQuestion];
 
-  question.textContent = "I knew it 😘❤️";
+  question.textContent = "";
+  imageArea.innerHTML = `<img src="${comment.gif}">`;
 
-  imageArea.innerHTML = `
-    <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+  arena.innerHTML = `
+    <div style="text-align:center;width:100%">
+      <div style="margin-bottom:15px;font-weight:500">${comment.text}</div>
+      <button id="nextBtn" style="position:relative;background:#2196f3;color:white;width:140px;border-radius:30px">Next Question 👉</button>
+    </div>
   `;
-
-  successMsg.textContent = "Mission successful 💘";
 
   sound.currentTime = 0;
   sound.play();
-
   startConfetti();
-});
+
+  document.getElementById("nextBtn").onclick = () => {
+    if (currentQuestion < questions.length - 1) {
+      showQuestion(currentQuestion + 1);
+    } else {
+      showFinalMessage();
+    }
+  };
+}
+
+/* ---------- FINAL ---------- */
+
+function showFinalMessage() {
+  imageArea.innerHTML = `<img src="https://media.giphy.com/media/l0HlQ7LRalQqdWfao/giphy.gif">`;
+
+  arena.innerHTML = `
+    <div style="text-align:center;width:100%">
+      <div style="color:#e91e63;font-weight:600;margin-bottom:15px">
+        You're my forever! 💕<br>Happy Birthday, my love! 🎂
+      </div>
+      <button id="replayBtn" style="position:relative;background:#ff69b4;color:white;width:120px;border-radius:30px">Replay 🎮</button>
+    </div>
+  `;
+
+  sound.currentTime = 0;
+  sound.play();
+  startConfetti();
+
+  document.getElementById("replayBtn").onclick = () => showQuestion(0);
+}
 
 /* ---------- CONFETTI ---------- */
 
@@ -269,15 +305,17 @@ function updateConfetti() {
   particles.forEach(p => {
     p.y += p.speed;
     p.x += Math.sin(p.angle);
-    ctx.fillStyle = p.color;
     ctx.fillRect(p.x, p.y, p.size, p.size);
   });
 
   particles = particles.filter(p => p.y < canvas.height);
 
-  if (particles.length)
-    requestAnimationFrame(updateConfetti);
+  if (particles.length) requestAnimationFrame(updateConfetti);
 }
+
+/* ---------- INIT ---------- */
+
+showQuestion(0);
 </script>
 
 </body>
